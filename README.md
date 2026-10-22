@@ -15,6 +15,8 @@
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white">
   <img alt="State" src="https://img.shields.io/badge/state-Riverpod-0F766E">
   <img alt="Tests" src="https://img.shields.io/badge/tests-10%20passing-2DD4BF">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-F5B83D"></a>
+  <a href="https://github.com/Al-Mahamud/kagoj/releases/latest"><img alt="Download APK" src="https://img.shields.io/github/v/release/Al-Mahamud/kagoj?label=download%20APK&color=0F766E"></a>
 </p>
 
 ---
@@ -120,6 +122,10 @@ tool/                  Logo generator, screenshot pipeline
 
 ## Getting started
 
+### Install the app
+Download the latest APK from **[Releases](https://github.com/Al-Mahamud/kagoj/releases/latest)**. `app-arm64-v8a-release.apk` fits almost every modern phone.
+Allow installs from your browser or file manager when Android asks.
+
 ### Requirements
 - Flutter 3.47+ (Dart 3.13+)
 - Android SDK 36, JDK 17
@@ -184,6 +190,11 @@ The chain is still fully verified against the system's trusted roots, and nothin
 - [ ] Reader text size and sepia theme
 - [ ] Daily review flashcards for saved words
 - [ ] Continue-listening card and word of the day on the home screen
+
+## License
+
+Kagoj's source code is released under the [MIT License](LICENSE).
+Fonts aren't included in the repo: the app loads Manrope, Newsreader and Hind Siliguri from Google Fonts, and the logo is drawn with Noto Serif Bengali. All of them use the SIL Open Font License.
 
 ## Disclaimer
 
