@@ -1,7 +1,7 @@
 name: kagoj
 description: ePaper reader for Prothom Alo and The Daily Star with listen, meaning and translation tools.
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
