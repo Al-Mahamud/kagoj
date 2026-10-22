@@ -1,0 +1,5 @@
+package com.kagoj.kagoj
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

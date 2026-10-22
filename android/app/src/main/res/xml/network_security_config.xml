@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  profile.thedailystar.net (Daily Star login) does not send its intermediate
+  certificate. Desktop browsers fetch it automatically; Android WebView does not,
+  so the login page fails with an SSL error. Supplying that public intermediate
+  (Sectigo Public Server Authentication CA OV R36, issued by Sectigo Root R46)
+  completes the chain. Scoped to thedailystar.net only; system CAs still apply.
+-->
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">thedailystar.net</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+            <certificates src="@raw/sectigo_ov_r36"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,6 @@
+# Copy to android/key.properties (git-ignored) to sign release builds with your key.
+# Without it, release builds fall back to the debug key.
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=kagoj
+storeFile=/absolute/path/to/kagoj-release.jks
