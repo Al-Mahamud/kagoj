@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/models/paper.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../papers/data/papers_repository.dart';
+import '../../reader/application/current_article_controller.dart';
 import '../../reader/data/article_extractor.dart';
 import '../../reader/domain/article.dart';
 
@@ -164,7 +165,10 @@ class _EpaperBrowserState extends ConsumerState<_EpaperBrowser> {
                 foregroundColor: context.colors.onAccent,
                 icon: const Icon(Icons.chrome_reader_mode_outlined),
                 label: const Text('Open in reader'),
-                onPressed: () => context.push('/reader', extra: _detected),
+                onPressed: () {
+                  ref.read(currentArticleProvider.notifier).open(_detected!);
+                  context.push('/reader');
+                },
               ),
       ),
     );

@@ -9,6 +9,7 @@ mkdirSync(outDir, { recursive: true });
 
 const shots = [
   ['home', 'light'],
+  ['nowreading', 'light'],
   ['meaning', 'light'],
   ['translate', 'light'],
   ['listen', 'light'],

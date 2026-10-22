@@ -5,7 +5,7 @@
 //   flutter build web -t lib/demo/main_demo.dart
 //   …/index.html?screen=meaning&theme=dark
 //
-// screen: home | meaning | translate | listen | words | settings | addpaper
+// screen: home | nowreading | meaning | translate | listen | words | settings | addpaper
 // theme:  light | dark
 //
 // The papers and articles here are fictional sample content.
@@ -26,6 +26,7 @@ import '../features/listen/application/listen_controller.dart';
 import '../features/listen/data/tts_service.dart';
 import '../features/papers/data/papers_repository.dart';
 import '../features/papers/presentation/paper_form_sheet.dart';
+import '../features/reader/application/current_article_controller.dart';
 import '../features/reader/domain/article.dart';
 import '../features/reader/presentation/widgets/meaning_sheet.dart';
 import '../features/reader/presentation/widgets/translation_sheet.dart';
@@ -141,6 +142,15 @@ class _DemoTts extends TtsService {
   Future<bool> isLanguageAvailable(String locale) async => true;
 }
 
+class _DemoCurrentArticle extends CurrentArticleController {
+  _DemoCurrentArticle(this.article);
+
+  final Article article;
+
+  @override
+  Article? build() => article;
+}
+
 /// Frozen mid-article: reading the fourth sentence.
 class _DemoListenController extends ListenController {
   @override
@@ -161,9 +171,13 @@ Future<void> main() async {
   final preferences = await SharedPreferences.getInstance();
   await preferences.setString('theme_mode', params['theme'] ?? 'light');
 
+  final openArticle = switch (screen) {
+    'meaning' || 'listen' || 'nowreading' => _englishArticle,
+    'translate' => _banglaArticle,
+    _ => null,
+  };
   final router = switch (screen) {
-    'meaning' || 'listen' => createRouter(initialLocation: '/reader', initialExtra: _englishArticle),
-    'translate' => createRouter(initialLocation: '/reader', initialExtra: _banglaArticle),
+    'meaning' || 'listen' || 'translate' => createRouter(initialLocation: '/reader'),
     'words' => createRouter(initialLocation: '/words'),
     'settings' => createRouter(initialLocation: '/settings'),
     _ => createRouter(),
@@ -190,7 +204,10 @@ Future<void> main() async {
       dictionaryRepositoryProvider.overrideWithValue(_DemoDictionary()),
       translationRepositoryProvider.overrideWithValue(_DemoTranslation()),
       ttsServiceProvider.overrideWithValue(_DemoTts()),
-      if (screen == 'listen') listenControllerProvider.overrideWith(_DemoListenController.new),
+      if (screen == 'listen' || screen == 'nowreading')
+        listenControllerProvider.overrideWith(_DemoListenController.new),
+      if (openArticle != null)
+        currentArticleProvider.overrideWith(() => _DemoCurrentArticle(openArticle)),
     ],
     child: KagojApp(
       router: router,

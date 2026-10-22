@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../listen/application/listen_controller.dart';
 import '../../listen/presentation/player_panel.dart';
+import '../application/current_article_controller.dart';
 import '../domain/article.dart';
 import 'widgets/article_view.dart';
 import 'widgets/meaning_sheet.dart';
 import 'widgets/translation_sheet.dart';
 
+/// The /reader route: shows whatever article is currently open.
+class ReaderRoute extends ConsumerWidget {
+  const ReaderRoute({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final article = ref.watch(currentArticleProvider);
+    if (article == null) return const Scaffold();
+    // A new article gets a fresh reader (scroll position, paragraph keys).
+    return ReaderScreen(key: ValueKey(article.signature), article: article);
+  }
+}
+
 /// Kagoj's own reader for an article extracted from the ePaper text view.
 /// Tap a word → meaning; select text → "Translate"; Listen → read aloud.
+/// Back keeps the article open (see the "Now reading" bar); ✕ closes it.
 class ReaderScreen extends ConsumerStatefulWidget {
   const ReaderScreen({super.key, required this.article});
 
@@ -59,6 +75,15 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     );
   }
 
+  void _close() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/');
+    }
+    ref.read(currentArticleProvider.notifier).close();
+  }
+
   void _showTranslation(String text) {
     if (text.trim().isEmpty) return;
     showModalBottomSheet<void>(
@@ -93,6 +118,14 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           ],
         ),
         // TODO: text size / theme (Aa) and bookmark actions.
+        actions: [
+          IconButton(
+            tooltip: 'Close article',
+            icon: const Icon(Icons.close_rounded),
+            onPressed: _close,
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SelectionArea(
         onSelectionChanged: (content) => _selection = content?.plainText ?? '',

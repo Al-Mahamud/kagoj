@@ -2,7 +2,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/epaper/presentation/epaper_browser_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
-import '../../features/reader/domain/article.dart';
 import '../../features/reader/presentation/reader_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
@@ -12,13 +11,13 @@ final appRouter = createRouter();
 
 /// The ePaper browser and reader live inside the Home branch so the bottom
 /// navigation bar stays visible; tapping Home again returns to the home page.
-/// [initialLocation] and [initialExtra] let the demo build open any screen.
-GoRouter createRouter({String initialLocation = '/', Object? initialExtra}) => GoRouter(
+/// [initialLocation] lets the demo build open any screen.
+GoRouter createRouter({String initialLocation = '/'}) => GoRouter(
   initialLocation: initialLocation,
-  initialExtra: initialExtra,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, shell) => AppShell(shell: shell),
+      builder: (context, state, shell) =>
+          AppShell(shell: shell, location: state.uri.path),
       branches: [
         StatefulShellBranch(routes: [
           GoRoute(
@@ -32,8 +31,7 @@ GoRouter createRouter({String initialLocation = '/', Object? initialExtra}) => G
               ),
               GoRoute(
                 path: 'reader',
-                builder: (_, state) =>
-                    ReaderScreen(article: state.extra! as Article),
+                builder: (_, __) => const ReaderRoute(),
               ),
             ],
           ),

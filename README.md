@@ -14,7 +14,7 @@
   <img alt="Dart" src="https://img.shields.io/badge/Dart-3.13-0175C2?logo=dart&logoColor=white">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white">
   <img alt="State" src="https://img.shields.io/badge/state-Riverpod-0F766E">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-8%20passing-2DD4BF">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-10%20passing-2DD4BF">
 </p>
 
 ---
@@ -43,9 +43,9 @@ It comes with **Prothom Alo** and **The Daily Star**, and you can add any other 
 <summary><b>More screens</b></summary>
 <br>
 
-| Add a paper by link | Settings (dark) | Listen (dark) |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/raw/addpaper-light.png" width="240"> | <img src="docs/screenshots/raw/settings-dark.png" width="240"> | <img src="docs/screenshots/raw/listen-dark.png" width="240"> |
+| Now reading bar | Add a paper by link | Settings (dark) | Listen (dark) |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/raw/nowreading-light.png" width="200"> | <img src="docs/screenshots/raw/addpaper-light.png" width="200"> | <img src="docs/screenshots/raw/settings-dark.png" width="200"> | <img src="docs/screenshots/raw/listen-dark.png" width="200"> |
 
 </details>
 
@@ -57,6 +57,7 @@ It comes with **Prothom Alo** and **The Daily Star**, and you can add any other 
 |---|---|
 | **📰 Your papers, one tap away** | Prothom Alo and The Daily Star are built in. Add any other e-paper by link, with a name and language; it's saved on the phone. Long-press a paper to edit or remove it. |
 | **📖 Reader view** | Articles open in a clean reader with newspaper typography (*Newsreader* for English, *Hind Siliguri* for Bangla). |
+| **📌 Now reading** | Leave the reader and the article stays docked above the navigation bar on every tab, with play/pause while listening. Tap to jump back; it only goes when you press ✕ or open another article. |
 | **🔊 Read aloud** | Uses the phone's text-to-speech in `bn-BD` or `en-US`. Reads one sentence at a time, highlighting and scrolling as it goes. Speed control and previous/next sentence. |
 | **👆 Tap for meaning** | Part of speech, IPA pronunciation, definition, similar words and the sentence the word came from. Play the pronunciation at normal or 0.5× speed. |
 | **🌐 Translate** | Select text → *Translate* → original and translation side by side, each with its own *Listen* button. |
@@ -150,6 +151,7 @@ The tests cover:
 - splitting English and Bangla text into sentences
 - the dictionary fallback, simulating a real outage (HTTP 530) with no network calls
 - saving and restoring the theme choice
+- the "Now reading" bar staying across tabs, being replaced by a new article, and closing with ✕
 
 ## Notes
 
