@@ -11,6 +11,7 @@ import '../../papers/data/papers_repository.dart';
 import '../../reader/application/current_article_controller.dart';
 import '../../reader/data/article_extractor.dart';
 import '../../reader/domain/article.dart';
+import '../data/login_cookies.dart';
 
 /// Resolves the paper by id, then shows its site.
 class EpaperBrowserScreen extends ConsumerWidget {
@@ -39,9 +40,10 @@ class EpaperBrowserScreen extends ConsumerWidget {
   }
 }
 
-/// Shows the real ePaper site. Login cookies persist in the WebView, so the
-/// user signs in once. While browsing, the page is polled for an article in
-/// text view; when one is found, "Open in reader" appears.
+/// Shows the real ePaper site. Login cookies are kept across app restarts
+/// (see [LoginCookies]), so the user signs in once. While browsing, the page
+/// is polled for an article in text view; when one is found, "Open in reader"
+/// appears.
 class _EpaperBrowser extends ConsumerStatefulWidget {
   const _EpaperBrowser({super.key, required this.paper});
 
@@ -51,7 +53,8 @@ class _EpaperBrowser extends ConsumerStatefulWidget {
   ConsumerState<_EpaperBrowser> createState() => _EpaperBrowserState();
 }
 
-class _EpaperBrowserState extends ConsumerState<_EpaperBrowser> {
+class _EpaperBrowserState extends ConsumerState<_EpaperBrowser>
+    with WidgetsBindingObserver {
   InAppWebViewController? _controller;
   Timer? _poll;
   bool _checking = false;
@@ -61,9 +64,14 @@ class _EpaperBrowserState extends ConsumerState<_EpaperBrowser> {
   /// Why the current page failed to load, shown instead of a blank page.
   String? _error;
 
+  /// Every site visited this time, such as the separate login site, so their
+  /// login cookies are kept too.
+  final _visited = <String, WebUri>{};
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // The text view usually opens without a URL change, so poll instead of
     // relying on navigation callbacks alone.
     _poll = Timer.periodic(const Duration(seconds: 2), (_) => _detect());
@@ -71,8 +79,24 @@ class _EpaperBrowserState extends ConsumerState<_EpaperBrowser> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _poll?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The app may be killed while in the background; keep the login first.
+    if (state == AppLifecycleState.paused) _keepLogin();
+  }
+
+  void _keepLogin([WebUri? url]) {
+    if (url != null && (url.scheme == 'https' || url.scheme == 'http')) {
+      // Cookies can be limited to a path, so remember the path but not the query.
+      final page = '${url.origin}${url.path}';
+      _visited[page] = WebUri(page);
+    }
+    ref.read(loginCookiesProvider).keep(_visited.values);
   }
 
   Future<void> _detect() async {
@@ -140,7 +164,10 @@ class _EpaperBrowserState extends ConsumerState<_EpaperBrowser> {
               onWebViewCreated: (controller) => _controller = controller,
               onProgressChanged: (_, progress) =>
                   setState(() => _progress = progress / 100),
-              onLoadStop: (_, __) => _detect(),
+              onLoadStop: (_, url) {
+                _detect();
+                _keepLogin(url);
+              },
               onReceivedError: (_, request, error) {
                 if (request.isForMainFrame != true) return;
                 setState(() => _error = error.description);
