@@ -82,12 +82,21 @@ class Paper {
       );
 }
 
-// TODO: fill selectors after inspecting each site's text view.
+/// Both built-in papers run on the same ePaper platform. Its text view puts
+/// the article in #body and, when the story jumps to another page, the rest
+/// of it in #divlinkedstorybody.
+const _epaperPlatformSelectors = PaperSelectors(
+  container: '#textView #body, #textView #divlinkedstorybody',
+  title: '#divheading .head_line',
+  byline: '#textView #byline',
+);
+
 const prothomAlo = Paper(
   id: 'prothomAlo',
   name: 'Prothom Alo',
   url: 'https://epaper.prothomalo.com/',
   language: PaperLanguage.bangla,
+  selectors: _epaperPlatformSelectors,
   builtIn: true,
   colorValue: 0xFF13233A,
 );
@@ -99,6 +108,7 @@ const dailyStar = Paper(
   name: 'The Daily Star',
   url: 'https://epaper.thedailystar.net/',
   language: PaperLanguage.english,
+  selectors: _epaperPlatformSelectors,
   builtIn: true,
   colorValue: 0xFF0F766E,
 );
